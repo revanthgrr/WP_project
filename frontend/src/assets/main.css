@@ -201,8 +201,7 @@ a:hover { color: var(--color-primary-dark); }
   padding: 1rem 1.5rem;
 }
 .modal-title { font-weight: 700; }
-.btn-close { filter: var(--bs-body-color) == '#f1f5f9' ? invert(1) : none; }
-[data-theme="dark"] .btn-close { filter: invert(1); }
+.btn-close { filter: none; }
 
 /* ── Scrollbar ──────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
