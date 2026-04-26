@@ -21,17 +21,16 @@
 
     <!-- Navigation -->
     <nav class="sidebar-nav px-3 py-2">
-      <router-link
+      <a
         v-for="item in navItems"
         :key="item.path"
-        :to="item.path"
         class="nav-item"
         :class="{ active: $route.path === item.path }"
-        @click="uiStore.closeSidebar()"
+        @click.prevent="navigate(item.path)"
       >
         <i :class="['bi', item.icon]"></i>
         <span>{{ item.label }}</span>
-      </router-link>
+      </a>
     </nav>
 
     <div class="mt-auto px-3 pb-4">
@@ -65,6 +64,11 @@ const navItems = [
   { path: '/budget',       icon: 'bi-pie-chart-fill',   label: 'Budget'        },
   { path: '/reports',      icon: 'bi-bar-chart-fill',   label: 'Reports'       },
 ]
+
+const navigate = (path) => {
+  router.push(path)
+  uiStore.closeSidebar()
+}
 
 const handleLogout = () => {
   authStore.logout()
