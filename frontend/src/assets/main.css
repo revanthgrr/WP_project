@@ -276,6 +276,12 @@ a:hover { color: var(--color-primary-dark); }
   flex: 1;
 }
 
+@media (max-width: 767.98px) {
+  .page-content {
+    padding: 1.25rem 1rem;
+  }
+}
+
 /* ── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 991.98px) {
   .app-sidebar {
