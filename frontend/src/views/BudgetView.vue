@@ -16,19 +16,13 @@
 
     <!-- Summary row -->
     <div class="row g-3 mb-4">
-      <div class="col-sm-4">
+      <div class="col-sm-6">
         <div class="card text-center py-3">
-          <div class="fw-bold h5 mb-0 text-primary">{{ budgetStore.budgets.length > 0 ? 'Yes' : 'No' }}</div>
-          <div class="text-muted text-sm">Budget Set</div>
+          <div class="fw-bold h5 mb-0 text-primary">{{ budgetStore.budgets.length }} Active</div>
+          <div class="text-muted text-sm">Budgets Set</div>
         </div>
       </div>
-      <div class="col-sm-4">
-        <div class="card text-center py-3">
-          <div class="fw-bold h5 mb-0 text-expense">{{ overBudgetCount }}</div>
-          <div class="text-muted text-sm">Over Budget</div>
-        </div>
-      </div>
-      <div class="col-sm-4">
+      <div class="col-sm-6">
         <div class="card text-center py-3">
           <div class="fw-bold h5 mb-0 text-income">₹{{ totalRemaining.toLocaleString('en-IN') }}</div>
           <div class="text-muted text-sm">Total Remaining</div>
