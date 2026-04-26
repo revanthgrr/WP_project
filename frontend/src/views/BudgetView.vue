@@ -18,8 +18,8 @@
     <div class="row g-3 mb-4">
       <div class="col-sm-6">
         <div class="card text-center py-3">
-          <div class="fw-bold h5 mb-0 text-primary">{{ budgetStore.budgets.length }} Active</div>
-          <div class="text-muted text-sm">Budgets Set</div>
+          <div class="fw-bold h5 mb-0 text-primary">₹{{ totalBudgeted.toLocaleString('en-IN') }}</div>
+          <div class="text-muted text-sm">Total Budgeted</div>
         </div>
       </div>
       <div class="col-sm-6">
@@ -87,6 +87,8 @@ const selectedMonth = ref(getLocalISOMonth())
 const editTarget    = ref(null)
 
 const overBudgetCount = computed(() => budgetStore.budgets.filter(b => b.isOverBudget).length)
+const totalBudgeted   = computed(() =>
+  budgetStore.budgets.reduce((s, b) => s + b.limit, 0))
 const totalRemaining  = computed(() =>
   budgetStore.budgets.reduce((s, b) => s + Math.max(0, b.limit - b.spent), 0))
 
