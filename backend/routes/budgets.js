@@ -11,7 +11,6 @@ const { protect } = require('../middleware/auth');
 const validate    = require('../middleware/validate');
 
 const budgetRules = [
-  body('categoryId').notEmpty().withMessage('Category is required'),
   body('month').matches(/^\d{4}-(0[1-9]|1[0-2])$/).withMessage('Month format must be YYYY-MM'),
   body('limit').isFloat({ min: 1 }).withMessage('Limit must be greater than 0'),
 ];

@@ -14,14 +14,8 @@
           <form @submit.prevent="handleSubmit">
             <div class="modal-body">
               <div class="row g-3">
-                <div class="col-12">
-                  <label class="form-label">Category *</label>
-                  <select v-model="form.categoryId" class="form-select" required :disabled="editing">
-                    <option value="" disabled>Select expense category</option>
-                    <option v-for="cat in categoryStore.expenseCategories" :key="cat._id" :value="cat._id">
-                      {{ cat.name }}
-                    </option>
-                  </select>
+                <div class="col-12" style="display: none;">
+                  <!-- Category removed as budget is global now -->
                 </div>
                 <div class="col-sm-6">
                   <label class="form-label">Month *</label>
@@ -51,7 +45,6 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { useCategoryStore } from '@/store/categoryStore'
 import { useBudgetStore }   from '@/store/budgetStore'
 import { useUiStore }       from '@/store/uiStore'
 import { getLocalISOMonth } from '@/utils/dateUtils'
@@ -62,7 +55,6 @@ const props = defineProps({
 })
 const emit = defineEmits(['saved'])
 
-const categoryStore = useCategoryStore()
 const budgetStore   = useBudgetStore()
 const uiStore       = useUiStore()
 
@@ -71,7 +63,6 @@ const loading = ref(false)
 const error   = ref('')
 
 const defaultForm = () => ({
-  categoryId: '',
   month: getLocalISOMonth(),
   limit: '',
 })
@@ -79,7 +70,7 @@ const form = ref(defaultForm())
 
 watch(() => props.editData, (val) => {
   if (val) {
-    form.value = { categoryId: val.categoryId?._id || val.categoryId, month: val.month, limit: val.limit }
+    form.value = { month: val.month, limit: val.limit }
   } else {
     form.value = defaultForm()
   }

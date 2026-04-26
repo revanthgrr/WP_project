@@ -4,14 +4,14 @@
 const Budget      = require('../models/Budget');
 const Transaction = require('../models/Transaction');
 
-// Helper: sum expenses for a category/month for this user
-const getSpent = async (userId, categoryId, month) => {
+// Helper: sum expenses for a month for this user
+const getSpent = async (userId, month) => {
   const [year, m] = month.split('-');
   const start = new Date(year, m - 1, 1);
   const end   = new Date(year, m, 0, 23, 59, 59);
 
   const result = await Transaction.aggregate([
-    { $match: { userId, categoryId, type: 'expense', date: { $gte: start, $lte: end } } },
+    { $match: { userId, type: 'expense', date: { $gte: start, $lte: end } } },
     { $group: { _id: null, total: { $sum: '$amount' } } },
   ]);
   return result[0]?.total || 0;
@@ -21,13 +21,12 @@ const getSpent = async (userId, categoryId, month) => {
 const getBudgets = async (req, res, next) => {
   try {
     const month = req.query.month || new Date().toISOString().slice(0, 7);
-    const budgets = await Budget.find({ userId: req.user._id, month })
-      .populate('categoryId', 'name icon color');
+    const budgets = await Budget.find({ userId: req.user._id, month });
 
     // Attach spending data to each budget
     const budgetsWithUsage = await Promise.all(
       budgets.map(async (b) => {
-        const spent = await getSpent(req.user._id, b.categoryId._id, month);
+        const spent = await getSpent(req.user._id, month);
         return {
           ...b.toObject(),
           spent,
@@ -46,9 +45,8 @@ const getBudgets = async (req, res, next) => {
 // ── @route  POST /api/budgets ─────────────────────────────
 const createBudget = async (req, res, next) => {
   try {
-    const { categoryId, month, limit } = req.body;
-    const budget = await Budget.create({ userId: req.user._id, categoryId, month, limit });
-    await budget.populate('categoryId', 'name icon color');
+    const { month, limit } = req.body;
+    const budget = await Budget.create({ userId: req.user._id, month, limit });
     res.status(201).json({ success: true, data: budget });
   } catch (err) {
     next(err);
@@ -62,7 +60,7 @@ const updateBudget = async (req, res, next) => {
       { _id: req.params.id, userId: req.user._id },
       { limit: req.body.limit },
       { new: true, runValidators: true }
-    ).populate('categoryId', 'name icon color');
+    );
 
     if (!budget) {
       return res.status(404).json({ success: false, message: 'Budget not found' });

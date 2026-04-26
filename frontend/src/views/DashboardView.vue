@@ -15,47 +15,17 @@
       </div>
     </div>
 
-    <!-- Summary cards -->
-    <div class="row g-3 mb-4">
-      <div class="col-sm-6 col-lg-3">
+    <div class="row g-4">
+      <!-- Summary cards (Left Column) -->
+      <div class="col-lg-4 d-flex flex-column gap-3">
         <SummaryCard label="Total Income" :value="summary.monthly.income"
                      icon="bi-arrow-down-circle-fill" color="#22c55e" />
-      </div>
-      <div class="col-sm-6 col-lg-3">
         <SummaryCard label="Total Expenses" :value="summary.monthly.expense"
                      icon="bi-arrow-up-circle-fill" color="#ef4444" />
       </div>
-      <div class="col-sm-6 col-lg-3">
-        <SummaryCard label="Net Balance" :value="summary.monthly.balance"
-                     icon="bi-wallet2" :color="summary.monthly.balance >= 0 ? '#6366f1' : '#f59e0b'" />
-      </div>
-      <div class="col-sm-6 col-lg-3">
-        <SummaryCard label="All-time Balance" :value="summary.allTime.balance"
-                     icon="bi-graph-up-arrow" color="#0ea5e9" />
-      </div>
-    </div>
 
-    <div class="row g-4">
-      <!-- Doughnut Chart -->
-      <div class="col-lg-5">
-        <div class="card h-100">
-          <div class="card-header">
-            <i class="bi bi-pie-chart me-2 text-primary"></i>Spending by Category
-          </div>
-          <div class="card-body">
-            <div v-if="summary.categoryBreakdown.length" style="height: 300px">
-              <DoughnutChart :breakdown="summary.categoryBreakdown" />
-            </div>
-            <div v-else class="text-center text-muted py-5">
-              <i class="bi bi-pie-chart display-4 d-block mb-2 opacity-25"></i>
-              No expense data for this month
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Recent Transactions -->
-      <div class="col-lg-7">
+      <!-- Recent Transactions (Right Column) -->
+      <div class="col-lg-8">
         <div class="card h-100">
           <div class="card-header d-flex align-items-center justify-content-between">
             <span><i class="bi bi-clock-history me-2 text-primary"></i>Recent Transactions</span>
@@ -89,20 +59,6 @@
         </div>
       </div>
 
-      <!-- Monthly trend line chart -->
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <i class="bi bi-graph-up me-2 text-primary"></i>Monthly Trend ({{ new Date().getFullYear() }})
-          </div>
-          <div class="card-body" style="height:280px">
-            <LineChart v-if="monthlyData.length" :months="monthlyData" />
-            <div v-else class="text-center text-muted py-5">
-              <i class="bi bi-bar-chart display-4 d-block mb-2 opacity-25"></i>Loading chart…
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Transaction Modal -->
@@ -114,15 +70,12 @@
 import { ref, onMounted } from 'vue'
 import reportService from '@/services/reportService'
 import SummaryCard      from '@/components/SummaryCard.vue'
-import DoughnutChart    from '@/components/DoughnutChart.vue'
-import LineChart        from '@/components/LineChart.vue'
 import TransactionModal from '@/components/TransactionModal.vue'
 import { useCategoryStore } from '@/store/categoryStore'
 import { getLocalISOMonth } from '@/utils/dateUtils'
 
 const categoryStore  = useCategoryStore()
 const selectedMonth  = ref(getLocalISOMonth())
-const monthlyData    = ref([])
 
 const summary = ref({
   monthly: { income: 0, expense: 0, balance: 0 },
@@ -135,12 +88,8 @@ const formatDate = (d) =>
   new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
 
 const loadData = async () => {
-  const [summaryRes, monthlyRes] = await Promise.all([
-    reportService.getDashboardSummary({ month: selectedMonth.value }),
-    reportService.getMonthly({ year: new Date().getFullYear() }),
-  ])
+  const summaryRes = await reportService.getDashboardSummary({ month: selectedMonth.value })
   summary.value    = summaryRes.data.data
-  monthlyData.value = monthlyRes.data.data
 }
 
 onMounted(async () => {

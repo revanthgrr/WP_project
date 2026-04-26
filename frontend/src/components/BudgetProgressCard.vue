@@ -1,16 +1,19 @@
 <template>
   <div class="budget-card card p-3 mb-3" :class="cardStatus">
-    <div class="d-flex align-items-center justify-content-between mb-2">
+    <div class="d-flex align-items-start justify-content-between mb-2">
       <div class="d-flex align-items-center gap-2">
-        <span class="category-icon" :style="{ background: iconBg }">
-          <i :class="['bi', budget.categoryId?.icon || 'bi-tag']" :style="{ color: budget.categoryId?.color }"></i>
+        <span class="category-icon" style="background: #e0e7ff; color: #4f46e5;">
+          <i class="bi bi-wallet2"></i>
         </span>
         <div>
-          <div class="fw-semibold" style="font-size:.9rem">{{ budget.categoryId?.name }}</div>
+          <div class="fw-semibold" style="font-size:.9rem">Monthly Budget</div>
           <div class="text-xs text-muted">{{ budget.month }}</div>
         </div>
       </div>
-      <div class="text-end">
+      <div class="text-end d-flex flex-column align-items-end">
+        <div v-if="$slots.actions" class="mb-1">
+          <slot name="actions"></slot>
+        </div>
         <div class="fw-bold" :class="budget.isOverBudget ? 'text-expense' : 'text-primary'">
           ₹{{ budget.spent?.toLocaleString('en-IN') }}
         </div>
@@ -48,7 +51,6 @@ const cardStatus = computed(() => ({
   'over-budget': props.budget.isOverBudget,
   'near-limit':  !props.budget.isOverBudget && props.budget.percentage >= 80,
 }))
-const iconBg = computed(() => `${props.budget.categoryId?.color}20` || '#6366f120')
 const progressClass = computed(() => {
   if (props.budget.isOverBudget || props.budget.percentage >= 90) return 'bg-danger'
   if (props.budget.percentage >= 70) return 'bg-warning'

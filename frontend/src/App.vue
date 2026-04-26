@@ -1,6 +1,6 @@
 <template>
   <!-- Root App wrapper -->
-  <div :data-theme="uiStore.darkMode ? 'dark' : 'light'">
+  <div data-theme="light">
     <!-- Auth layout (no sidebar) -->
     <router-view v-if="!authStore.isAuthenticated" />
 
@@ -39,7 +39,6 @@ const authStore = useAuthStore()
 const uiStore   = useUiStore()
 
 onMounted(() => {
-  uiStore.initTheme()
   authStore.fetchMe()
 })
 </script>

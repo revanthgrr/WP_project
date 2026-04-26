@@ -12,14 +12,7 @@
       <!-- Current date -->
       <span class="text-muted text-sm d-none d-md-block">{{ currentDate }}</span>
 
-      <!-- Dark mode toggle -->
-      <button
-        class="btn btn-sm dark-toggle"
-        :title="uiStore.darkMode ? 'Switch to light mode' : 'Switch to dark mode'"
-        @click="uiStore.toggleDarkMode()"
-      >
-        <i :class="['bi', uiStore.darkMode ? 'bi-sun-fill' : 'bi-moon-stars-fill']"></i>
-      </button>
+
 
       <!-- Notifications placeholder -->
       <div class="nav-user-avatar">{{ initials }}</div>
@@ -61,24 +54,7 @@ const currentDate = computed(() =>
   font-weight: 700;
   color: var(--text-primary);
 }
-.dark-toggle {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-  background: var(--bg-hover);
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-}
-.dark-toggle:hover {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: #fff;
-}
+
 .nav-user-avatar {
   width: 38px;
   height: 38px;

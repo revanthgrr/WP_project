@@ -8,7 +8,7 @@
       <div class="d-flex align-items-center gap-2">
         <input type="month" v-model="selectedMonth" class="form-control form-control-sm"
                style="width:160px" @change="budgetStore.fetch(selectedMonth)" />
-        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#budgetModal" @click="editTarget = null">
+        <button v-if="budgetStore.budgets.length === 0" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#budgetModal" @click="editTarget = null">
           <i class="bi bi-plus-lg me-1"></i>Set Budget
         </button>
       </div>
@@ -18,8 +18,8 @@
     <div class="row g-3 mb-4">
       <div class="col-sm-4">
         <div class="card text-center py-3">
-          <div class="fw-bold h5 mb-0 text-primary">{{ budgetStore.budgets.length }}</div>
-          <div class="text-muted text-sm">Active Budgets</div>
+          <div class="fw-bold h5 mb-0 text-primary">{{ budgetStore.budgets.length > 0 ? 'Yes' : 'No' }}</div>
+          <div class="text-muted text-sm">Budget Set</div>
         </div>
       </div>
       <div class="col-sm-4">
@@ -56,17 +56,18 @@
 
     <div v-else class="row g-3">
       <div v-for="budget in budgetStore.budgets" :key="budget._id" class="col-md-6 col-lg-4">
-        <div class="position-relative">
-          <BudgetProgressCard :budget="budget" />
-          <div class="budget-actions position-absolute top-0 end-0 p-2 d-flex gap-1">
-            <button class="btn btn-xs btn-outline-primary" data-bs-toggle="modal" data-bs-target="#budgetModal" @click="editTarget = budget">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button class="btn btn-xs btn-outline-danger" @click="handleDelete(budget._id)">
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
-        </div>
+        <BudgetProgressCard :budget="budget">
+          <template #actions>
+            <div class="d-flex gap-1">
+              <button class="btn btn-xs btn-outline-primary" data-bs-toggle="modal" data-bs-target="#budgetModal" @click="editTarget = budget">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-xs btn-outline-danger" @click="handleDelete(budget._id)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </template>
+        </BudgetProgressCard>
       </div>
     </div>
 

@@ -10,11 +10,6 @@ const budgetSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    categoryId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category',
-      required: [true, 'Category is required'],
-    },
     month: {
       type: String, // Format: "YYYY-MM"
       required: [true, 'Month is required'],
@@ -29,7 +24,7 @@ const budgetSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// One budget per category per month per user
-budgetSchema.index({ userId: 1, categoryId: 1, month: 1 }, { unique: true });
+// One budget per month per user
+budgetSchema.index({ userId: 1, month: 1 }, { unique: true });
 
 module.exports = mongoose.model('Budget', budgetSchema);
